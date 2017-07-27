@@ -1,0 +1,10 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard1.5</TargetFramework>
+  </PropertyGroup>
+ <ItemGroup>
+    <ProjectReference Include="../Forum.Core/Forum.Core.csproj" />
+    <ProjectReference Include="../Forum.Infrastructure/Forum.Infrastructure.csproj" /> 
+  </ItemGroup>
+</Project>
