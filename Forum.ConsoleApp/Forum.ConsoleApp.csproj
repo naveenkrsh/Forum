@@ -4,5 +4,9 @@
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp1.1</TargetFramework>
   </PropertyGroup>
-
+  <ItemGroup>
+   <ProjectReference Include="../Forum.Core/Forum.Core.csproj" />
+    <ProjectReference Include="../Forum.Services/Forum.Services.csproj" />
+    <ProjectReference Include="../Forum.Infrastructure/Forum.Infrastructure.csproj" /> 
+   </ItemGroup>
 </Project>

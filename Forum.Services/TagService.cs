@@ -17,27 +17,24 @@ namespace Forum.Services
             _tagRepo = unitOfwork.TagRepository;
         }
 
-        public async Task<IEnumerable<Tag>> GetAllAsync()
+        public Task<IEnumerable<Tag>> GetAllAsync()
         {
-            return await _tagRepo.GetAllAsync();
+            return  _tagRepo.GetAllAsync();
         }
-        public async Task<Tag> FindOneAsync(Expression<Func<Tag, bool>> expression)
+        public Task<Tag> FindOneAsync(Expression<Func<Tag, bool>> expression)
         {
 
-            var res = await _tagRepo.Single(expression);
-            return res;
+            return _tagRepo.Single(expression);
+            //return res;
         }
-        public  Task<Tag> SaveAsync(Tag tag)
+        public async Task<Tag> SaveAsync(Tag tag)
         {
-             return FindOneAsync(t=> t.Name == tag.Name)
-             .ContinueWith((t)=>{
-                 if(t.Result != null)
-                  {
-                    throw new Exception("Duplicate tag entry");
-                  }
-                  return  _tagRepo.AddAsync(tag);
-             }).Result;
-  
+            var task = await FindOneAsync(t => t.Name == tag.Name);
+            if (task != null)
+            {
+                throw new Exception("Duplicate tag entry");
+            }
+            return await _tagRepo.AddAsync(tag);
         }
         public Task DeleteAsync(Expression<Func<Tag, bool>> expression)
         {

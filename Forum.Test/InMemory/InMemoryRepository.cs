@@ -10,15 +10,15 @@ namespace Forum.Test.InMemory
 {
     public class InMemoryRepository<TEntity> : IRepository<TEntity> where TEntity : BaseEntity
     {
-        private Dictionary<string, List<TEntity>> db;
+        private static Dictionary<string, List<TEntity>> db;
 
         static InMemoryRepository()
         {
-
+            db = new Dictionary<string, List<TEntity>>();
         }
         public InMemoryRepository()
         {
-            db = new Dictionary<string, List<TEntity>>();
+
         }
         private List<TEntity> Get()
         {
@@ -43,10 +43,10 @@ namespace Forum.Test.InMemory
         //     _db.GetCollection<T>().DeleteOne(T);
         // }
 
-        public async Task<TEntity> Single(Expression<Func<TEntity, bool>> expression)
+        public Task<TEntity> Single(Expression<Func<TEntity, bool>> expression)
         {
             //var filter = Builders<TEntity>.Filter.Eq("Name","Hello Naveen");
-            return await Task.Run(() =>
+            return Task.Run(() =>
             {
                 return Get().AsQueryable().Where(expression).FirstOrDefault();
             });

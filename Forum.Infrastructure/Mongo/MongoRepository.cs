@@ -32,10 +32,10 @@ namespace Forum.Infrastructure.Mongo
         //     _db.GetCollection<T>().DeleteOne(T);
         // }
 
-        public async Task<TEntity> Single(Expression<Func<TEntity, bool>> expression)
+        public Task<TEntity> Single(Expression<Func<TEntity, bool>> expression)
         {
             //var filter = Builders<TEntity>.Filter.Eq("Name","Hello Naveen");
-            return await Task.Run(() =>
+            return Task.Run(() =>
             {
                 return Get().AsQueryable().Where(expression).FirstOrDefault();
             });
@@ -64,22 +64,17 @@ namespace Forum.Infrastructure.Mongo
         //System.Linq.IQueryable<T> All<T>(int page, int pageSize);
         public async Task<TEntity> AddAsync(TEntity item)// where T : class, new()
         {
-
-            var result = Get().InsertOneAsync(item);
-
-            await result;
-
+            await Get().InsertOneAsync(item);
             return item;
-            //Console.WriteLine("Added");
         }
 
-        public async Task DeleteAsync(Expression<Func<TEntity, bool>> expression)
+        public Task DeleteAsync(Expression<Func<TEntity, bool>> expression)
         {
-            await Get().DeleteOneAsync(expression);
+             return Get().DeleteOneAsync(expression);
         }
-        public async Task DeleteAllAsync()
+        public Task DeleteAllAsync()
         {
-            await Get().DeleteManyAsync(Builders<TEntity>.Filter.Empty);
+            return Get().DeleteManyAsync(Builders<TEntity>.Filter.Empty);
         }
     }
 }
