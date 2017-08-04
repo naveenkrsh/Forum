@@ -10,15 +10,15 @@ namespace Forum.Test.InMemory
 {
     public class InMemoryRepository<TEntity> : IRepository<TEntity> where TEntity : BaseEntity
     {
-        private static Dictionary<string, List<TEntity>> db;
+        private Dictionary<string, List<TEntity>> db;
 
         static InMemoryRepository()
         {
-            db = new Dictionary<string, List<TEntity>>();
+            
         }
         public InMemoryRepository()
         {
-
+            db = new Dictionary<string, List<TEntity>>();
         }
         private List<TEntity> Get()
         {
@@ -109,6 +109,31 @@ namespace Forum.Test.InMemory
             {
                 if (db.ContainsKey(EntityName))
                     db.Remove(EntityName);
+            });
+        }
+
+        public async Task UpdateAsync(TEntity item)
+        {
+           await UpdateAsync(i=> i.Id== item.Id,item);
+        }
+
+        public async Task  UpdateAsync(Expression<Func<TEntity, bool>> expression,TEntity item)
+        {
+            await Task.Run(() =>
+            {
+
+                var res = Get();
+                if (db.ContainsKey(EntityName))
+                    db.Remove(EntityName);
+                var find = res.AsQueryable().Where(expression).FirstOrDefault();                
+                db.Add(EntityName, res);
+            });
+        }
+
+        public Task AddSubDocument<TFeild,TItem>(Expression<Func<TEntity, bool>> expression, Expression<Func<TEntity, TFeild>> action ,TItem value)
+        {
+            return Task.Run(()=>{
+                
             });
         }
     }

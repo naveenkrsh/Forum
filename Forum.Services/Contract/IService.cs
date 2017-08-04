@@ -11,5 +11,6 @@ namespace Forum.Services.Contract
         Task<T> FindOneAsync(Expression<Func<T, bool>> expression);
         Task<T> SaveAsync(T tag);
         Task DeleteAsync(Expression<Func<T, bool>> expression);
+        void UpdateAsync(T item);
     }
 }

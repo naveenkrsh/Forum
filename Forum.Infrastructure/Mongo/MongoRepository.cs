@@ -76,5 +76,33 @@ namespace Forum.Infrastructure.Mongo
         {
             return Get().DeleteManyAsync(Builders<TEntity>.Filter.Empty);
         }
+
+        public async Task UpdateAsync(TEntity item)
+        {
+            await UpdateAsync((i=> i.Id == item.Id), item);
+        }
+        public async Task UpdateAsync(Expression<Func<TEntity, bool>> expression,TEntity item)
+        {
+            await Get().FindOneAndReplaceAsync(expression,item);
+        }
+
+        public async Task AddSubDocument<TFeild,TItem>(Expression<Func<TEntity, bool>> expression, Expression<Func<TEntity, TFeild>> action ,TItem value)
+        {
+            //var source = Expression.Parameter(typeof(TEntity), "source");
+          
+            FieldDefinition<TEntity> fd = GetFiledName(action);
+            //Func<string> lengthMethod = fie.Compile();
+            //string stringLength = lengthMethod();
+            //var update = Builders<TEntity>.Update.Push(field,value);
+            var update = Builders<TEntity>.Update.Push(fd,value);
+            await Get().UpdateOneAsync(expression,update); 
+        }
+
+        private static string GetFiledName<TFeild>(Expression<Func<TEntity, TFeild>> action)
+        {
+            var expression = (MemberExpression) action.Body;
+            string name = expression.Member.Name;
+            return name;
+        }
     }
 }

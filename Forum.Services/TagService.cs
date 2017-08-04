@@ -14,7 +14,7 @@ namespace Forum.Services
         private IRepository<Tag> _tagRepo;
         public TagService(IUnitOfWork unitOfwork)
         {
-            _tagRepo = unitOfwork.TagRepository;
+            _tagRepo = unitOfwork.GetRepository<Tag>();
         }
 
         public Task<IEnumerable<Tag>> GetAllAsync()
@@ -39,6 +39,12 @@ namespace Forum.Services
         public Task DeleteAsync(Expression<Func<Tag, bool>> expression)
         {
             return _tagRepo.DeleteAsync(expression);
+        }
+
+        public async void UpdateAsync(Tag tag)
+        {
+            tag.ModifiedTime = new DateTime().ToUniversalTime();
+            await _tagRepo.UpdateAsync(tag);
         }
     }
 }
